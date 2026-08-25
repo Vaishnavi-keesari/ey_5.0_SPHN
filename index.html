@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A curated product collection powered by the Fake Store API.">
+	<title>Foundry | Everyday objects, considered</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+		:root {
+			--ink: #18302a;
+			--muted: #6c7c76;
+			--paper: #f5f4ee;
+			--surface: #fffefa;
+			--line: #dfe4dc;
+			--accent: #e26d45;
+			--accent-dark: #bd4d2d;
+			--sage: #dbe8d9;
+			--shadow: 0 18px 40px rgba(33, 55, 46, 0.08);
+		}
+
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			color: var(--ink);
+			background: var(--paper);
+			font-family: 'DM Sans', sans-serif;
+		}
+		button, input, select { font: inherit; }
+		button { cursor: pointer; }
+
+		.topline {
+			min-height: 36px;
+			padding: 9px 5vw;
+			color: #f9f7ef;
+			background: var(--ink);
+			font-size: 11px;
+			letter-spacing: .13em;
+			text-align: center;
+			text-transform: uppercase;
+		}
+		header { padding: 25px 5vw 0; }
+		.nav {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 24px;
+			max-width: 1280px;
+			margin: auto;
+		}
+		.brand { color: var(--ink); font-size: 21px; font-weight: 700; letter-spacing: .14em; text-decoration: none; }
+		.brand span { color: var(--accent); }
+		.nav-note { color: var(--muted); font-size: 13px; }
+		.hero {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 280px;
+			align-items: end;
+			gap: 40px;
+			max-width: 1280px;
+			margin: 66px auto 54px;
+		}
+		.eyebrow { margin: 0 0 15px; color: var(--accent-dark); font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+		h1 { max-width: 680px; margin: 0; font-family: 'Playfair Display', serif; font-size: clamp(42px, 6vw, 80px); line-height: .98; letter-spacing: -.04em; }
+		.hero-copy { margin: 20px 0 0; max-width: 520px; color: var(--muted); font-size: 16px; line-height: 1.65; }
+		.hero-stamp { padding: 23px; border: 1px solid var(--ink); background: var(--sage); transform: rotate(2deg); }
+		.hero-stamp strong { display: block; margin-bottom: 6px; font-family: 'Playfair Display', serif; font-size: 28px; }
+		.hero-stamp p { margin: 0; color: #52675c; font-size: 12px; line-height: 1.5; }
+
+		main { max-width: 1280px; margin: auto; padding: 0 5vw 80px; }
+		.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+		.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+		.filter { padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: transparent; font-size: 12px; text-transform: capitalize; transition: .2s ease; }
+		.filter:hover, .filter.active { border-color: var(--ink); color: #fffefa; background: var(--ink); }
+		.tools { display: flex; align-items: center; gap: 10px; }
+		.search { width: 190px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 4px; outline: none; color: var(--ink); background: var(--surface); font-size: 12px; }
+		.search:focus { border-color: var(--accent); }
+		select { padding: 10px 28px 10px 12px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: var(--surface); font-size: 12px; }
+		.count { margin: 24px 0 14px; color: var(--muted); font-size: 12px; }
+		.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+		.card { position: relative; display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--line); background: var(--surface); transition: transform .25s ease, box-shadow .25s ease; }
+		.card:hover { box-shadow: var(--shadow); transform: translateY(-5px); }
+		.visual { position: relative; display: grid; place-items: center; height: 255px; padding: 28px; background: #f0eee7; }
+		.visual img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform .3s ease; }
+		.card:hover .visual img { transform: scale(1.05); }
+		.tag { position: absolute; top: 12px; left: 12px; padding: 5px 8px; color: #fff; background: var(--accent); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+		.details { display: flex; flex: 1; flex-direction: column; padding: 18px; }
+		.category { margin: 0 0 8px; color: var(--accent-dark); font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+		.title { display: -webkit-box; min-height: 44px; margin: 0 0 12px; overflow: hidden; font-family: 'Playfair Display', serif; font-size: 17px; line-height: 1.3; line-clamp: 2; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+		.bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+		.price { font-size: 16px; font-weight: 700; }
+		.rating { color: #9b6b32; font-size: 11px; white-space: nowrap; }
+		.state { grid-column: 1 / -1; padding: 70px 20px; color: var(--muted); text-align: center; }
+		.spinner { width: 26px; height: 26px; margin: 0 auto 15px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+		@keyframes spin { to { transform: rotate(360deg); } }
+		footer { padding: 24px 5vw; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; text-align: center; }
+		@media (max-width: 950px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+		@media (max-width: 700px) {
+			header { padding-top: 18px; }
+			.nav-note { display: none; }
+			.hero { display: block; margin: 52px auto 40px; }
+			.hero-stamp { width: 220px; margin: 34px 0 0 auto; }
+			.toolbar { align-items: stretch; flex-direction: column; }
+			.tools { justify-content: space-between; }
+			.search { flex: 1; width: auto; }
+			.grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+			.visual { height: 190px; padding: 20px; }
+			.details { padding: 13px; }
+			.title { font-size: 15px; }
+		}
+		@media (max-width: 420px) { .grid { grid-template-columns: 1fr; } .visual { height: 240px; } }
+	</style>
+</head>
+<body>
+	<div class="topline">A considered collection of everyday essentials</div>
+	<header>
+		<nav class="nav"><a class="brand" href="./">FOUNDRY<span>.</span></a><span class="nav-note">Objects with a little more thought.</span></nav>
+		<section class="hero">
+			<div><p class="eyebrow">The edit / 2026</p><h1>Good things,<br>simply found.</h1><p class="hero-copy">A small, ever-changing selection of pieces for living, giving, and getting on with it.</p></div>
+			<aside class="hero-stamp"><strong><span id="product-total">--</span> pieces</strong><p>Curated from independent collections and ready for a closer look.</p></aside>
+		</section>
+	</header>
+	<main>
+		<div class="toolbar"><div id="filters" class="filters"><button class="filter active" data-category="all">All pieces</button></div><div class="tools"><input id="search" class="search" type="search" placeholder="Search the collection" aria-label="Search products"><select id="sort" aria-label="Sort products"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option><option value="rating">Best rated</option></select></div></div>
+		<p id="count" class="count">Finding the collection...</p>
+		<section id="grid" class="grid" aria-live="polite"><div class="state"><div class="spinner"></div>Gathering the good stuff...</div></section>
+	</main>
+	<footer>Foundry collection &middot; Powered by Fake Store API</footer>
+	<script>
+		const API_URL = 'https://fakestoreapi.com/products';
+		const grid = document.querySelector('#grid');
+		const filters = document.querySelector('#filters');
+		const search = document.querySelector('#search');
+		const sort = document.querySelector('#sort');
+		const count = document.querySelector('#count');
+		const total = document.querySelector('#product-total');
+		let products = [];
+		let activeCategory = 'all';
+
+		const money = (value) => `$${Number(value).toFixed(2)}`;
+		const titleCase = (value) => value.replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+		function render(items) {
+			count.textContent = `${items.length} ${items.length === 1 ? 'piece' : 'pieces'} showing`;
+			if (!items.length) {
+				grid.innerHTML = '<div class="state">Nothing matches that search. Try another phrase.</div>';
+				return;
+			}
+			grid.innerHTML = items.map((product) => `
+				<article class="card">
+					<div class="visual"><span class="tag">Selected</span><img src="${product.image}" alt="${product.title}" loading="lazy"></div>
+					<div class="details"><p class="category">${titleCase(product.category)}</p><h2 class="title">${product.title}</h2><div class="bottom"><span class="price">${money(product.price)}</span><span class="rating">★ ${product.rating.rate} (${product.rating.count})</span></div></div>
+				</article>`).join('');
+		}
+
+		function update() {
+			const query = search.value.trim().toLowerCase();
+			let visible = products.filter((product) => (activeCategory === 'all' || product.category === activeCategory) && product.title.toLowerCase().includes(query));
+			if (sort.value === 'low') visible.sort((a, b) => a.price - b.price);
+			if (sort.value === 'high') visible.sort((a, b) => b.price - a.price);
+			if (sort.value === 'rating') visible.sort((a, b) => b.rating.rate - a.rating.rate);
+			render(visible);
+		}
+
+		function createFilters(categories) {
+			categories.forEach((category) => {
+				const button = document.createElement('button');
+				button.className = 'filter'; button.dataset.category = category; button.textContent = titleCase(category);
+				button.addEventListener('click', () => { activeCategory = category; document.querySelectorAll('.filter').forEach((item) => item.classList.toggle('active', item === button)); update(); });
+				filters.append(button);
+			});
+		}
+
+		async function loadProducts() {
+			try {
+				const response = await fetch(API_URL);
+				if (!response.ok) throw new Error('Request failed');
+				products = await response.json();
+				total.textContent = products.length;
+				createFilters([...new Set(products.map((product) => product.category))]);
+				update();
+			} catch (error) {
+				count.textContent = 'Collection unavailable';
+				grid.innerHTML = '<div class="state">We could not reach the collection right now. Please refresh and try again.</div>';
+			}
+		}
+		search.addEventListener('input', update);
+		sort.addEventListener('change', update);
+		loadProducts();
+	</script>
+</body>
+</html>
